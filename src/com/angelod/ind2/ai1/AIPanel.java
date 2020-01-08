@@ -1,16 +1,42 @@
 package com.angelod.ind2.ai1;
 
+import javafx.scene.input.KeyCode;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class AIPanel extends JPanel {
+
     public AIPanel() {
         super();
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == 68){
+
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
     }
 
     int xSegs = 31;
     int ySegs = 31;
     int middleAxisLineWeight = 2;
+
+
+
 
     void drawGrid(Graphics g) {
         g.setColor(Color.black);
@@ -36,10 +62,14 @@ public class AIPanel extends JPanel {
 
     }
 
+    void startDesigner(){
+        
+    }
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         drawGrid(g);
+
     }
 
 

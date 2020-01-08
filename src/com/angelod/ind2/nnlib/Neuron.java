@@ -2,17 +2,45 @@ package com.angelod.ind2.nnlib;
 
 public class Neuron {
 
-    /**
-     * The activation of the neuron.
-     * 0.0 to 1.0
-     */
-    private int activation;
+    private double[] weights;
 
-    public int getActivation() {
+    private double activation;
+
+    private double bias;
+
+    public Neuron(int amountOfWeights){
+        activation = 0;
+        bias = 0;
+        weights = new double[amountOfWeights];
+    }
+
+    public void setActivation(double value){
+        activation = value;
+    }
+
+    public double getActivation(){
         return activation;
     }
 
-    public void setActivation(int activation) {
-        this.activation = activation;
+    public void setWeight(int index, double value){
+        weights[index] = value;
     }
+
+    public double getWeight(int index){
+        return weights[index];
+    }
+
+    public void computeActivation(Layer previous){
+
+        double wsum = 0;
+
+        //Get Weighted sum
+        for(int i = 0; i > previous.getNeuronCount(); i++){
+            wsum += weights[i]*previous.getNeuron(i).getActivation();
+        }
+
+        activation = Calculus.sigmoid(wsum + bias);
+
+    }
+
 }
