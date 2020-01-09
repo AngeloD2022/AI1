@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+
 public class AIPanel extends JPanel {
 
     public AIPanel() {
@@ -19,7 +20,9 @@ public class AIPanel extends JPanel {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == 68){
+                if(e.getKeyCode() == 68) {
+                    //Key code is 'd'
+
 
                 }
             }
