@@ -7,34 +7,28 @@ public class Path {
     /**
      * All points on the path.
      */
-    private PathPoint<Integer>[] points;
+    //private PathPoint<Integer>[] points;
+    boolean[][] pathTiles;
     private int pointsFilled;
+    private int xSegments;
+    private int ySegments;
+    private int screenWidth;
+    private int screenHeight;
+    int xIncrement;
+    int yIncrement;
 
-    public Path(int pointCount) {
-        points = new PathPoint[pointCount];
-        pointsFilled = 0;
+
+    public Path(int xSegments, int ySegments) {
+        this.xSegments = xSegments;
+        this.ySegments = ySegments;
+        this.pathTiles = new boolean[xSegments][ySegments];
     }
 
 
-    /**
-     * Appends point with given coordinates to the path.
-     *
-     * @param x
-     * @param y
-     */
-    public void appendPoint(int x, int y) {
-
-        if (pointsFilled < points.length) {
-
-            // Create new point with top ID
-            PathPoint newPoint = new PathPoint<Integer>(x, y, pointsFilled + 1);
-
-            // Add point to array.
-            points[pointsFilled] = newPoint;
-
-            // Increment filled point count
-            pointsFilled++;
-        }
+    public void toggleTile(int xPixels, int yPixels) {
+        int x = (xPixels / xIncrement);
+        int y = (yPixels / yIncrement);
+        pathTiles[x][y] = !pathTiles[x][y];
     }
 
 
@@ -46,9 +40,32 @@ public class Path {
      * @param yOffset         Y offset from 0
      * @param g               Graphics object to draw to.
      */
-    public void drawPath(int scaleFromOrigin, int xOffset, int yOffset, Graphics g) {
+    public void drawPath(int scaleFromOrigin, int xOffset, int yOffset, Graphics g, int screenw, int screenh) {
+        screenWidth = screenw;
+        screenHeight = screenh;
+        xIncrement = screenw / xSegments;
+        yIncrement = screenh / ySegments;
 
+        for (int x = 0; x < xSegments; x++) {
+            for (int y = 0; y < ySegments; y++) {
+                if (pathTiles[x][y]) {
+                    g.setColor(Color.red);
+                    g.fillRect((x * xIncrement), (y * yIncrement), xIncrement - ((screenWidth % xSegments) / xSegments), yIncrement - ((screenHeight % ySegments) / ySegments));
+                    g.setColor(Color.darkGray);
+                    //g.drawRect((x*xIncrement)+xOffset,(y*yIncrement)+yOffset,xIncrement,yIncrement);
+                }
+            }
+        }
+    }
 
+    public boolean validMove(int xPixels, int yPixels, int w, int a, int s, int d) {
+        int x = xPixels + d - a / xSegments;
+        int y = yPixels + s - w / ySegments;
+        return pathTiles[x][y];
+    }
+
+    public void clear() {
+        pathTiles = new boolean[xSegments][ySegments];
     }
 
 }

@@ -1,45 +1,91 @@
 package com.angelod.ind2.ai1;
 
-import javafx.scene.input.KeyCode;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 
 public class AIPanel extends JPanel {
 
+    int xSegs = 1;
+    int ySegs = 12;
+    int w = this.getWidth();
+    int h = this.getHeight();
+    int middleAxisLineWeight = 2;
+    Path path;
+    int x1;
+    int y1;
+
+
     public AIPanel() {
         super();
-        this.addKeyListener(new KeyListener() {
+        this.path = new Path(xSegs, ySegs);
+        this.addMouseListener(new MouseListener() {
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void mouseClicked(MouseEvent e) {
+
+                //path.toggleTile(e.getX(),e.getY());
+                repaint();
+                System.out.println("CLICK");
 
             }
 
             @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == 68) {
-                    //Key code is 'd'
+            public void mousePressed(MouseEvent e) {
+                path.toggleTile(e.getX(), e.getY());
+                x1 = e.getX() / (600 / xSegs);
+                y1 = e.getY() / (600 / ySegs);
+                System.out.println("PRESS");
+            }
 
+            @Override
+            public void mouseReleased(MouseEvent e) {
 
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                int x2 = e.getX() / (getWidth() / xSegs);
+                int y2 = e.getY() / (getHeight() / ySegs);
+                if (x2 != x1 || y2 != y1) {
+                    path.toggleTile(e.getX(), e.getY());
+                    x1 = e.getX() / (getWidth() / xSegs);
+                    y1 = e.getY() / (getHeight() / ySegs);
                 }
+                repaint();
+                System.out.println("DRAG:" + e.getX() + "," + e.getXOnScreen());
             }
 
             @Override
-            public void keyReleased(KeyEvent e) {
+            public void mouseMoved(MouseEvent e) {
 
             }
         });
     }
 
-    int xSegs = 31;
-    int ySegs = 31;
-    int middleAxisLineWeight = 2;
+    public void repaint() {
+        super.repaint();
+    }
 
+    public int getHeight() {
+        return super.getHeight();
+    }
 
-
+    public int getWidth() {
+        return super.getWidth();
+    }
 
     void drawGrid(Graphics g) {
         g.setColor(Color.black);
@@ -68,10 +114,15 @@ public class AIPanel extends JPanel {
     void startDesigner(){
         
     }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        drawGrid(g);
+        g.setColor(Color.red);
+        path.drawPath(1, 0, 0, g, this.getWidth(), this.getHeight());
+        //drawGrid(g);
+        System.out.println("REPAINT");
+        g.drawString(this.getWidth() + ", " + this.getHeight(), 50, 50);
 
     }
 

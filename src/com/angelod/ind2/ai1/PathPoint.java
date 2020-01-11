@@ -1,11 +1,11 @@
 package com.angelod.ind2.ai1;
 
-public class PathPoint<ntype> {
-    private ntype x;
-    private ntype y;
+public class PathPoint {
+    private int x;
+    private int y;
     private int id;
 
-    public PathPoint(ntype x, ntype y, int id) {
+    public PathPoint(int x, int y, int id) {
         this.x = x;
         this.y = y;
         this.id = id;
@@ -15,11 +15,11 @@ public class PathPoint<ntype> {
         this.id = id;
     }
 
-    public ntype getX() {
+    public int getX() {
         return x;
     }
 
-    public ntype getY() {
+    public int getY() {
         return y;
     }
 
@@ -27,11 +27,11 @@ public class PathPoint<ntype> {
         return id;
     }
 
-    public boolean isAdjacentTo(PathPoint<ntype> point) {
-        double px = (double) point.getX();
-        double py = (double) point.getY();
-        double x = (double) this.x;
-        double y = (double) this.y;
+    public boolean isAdjacentTo(PathPoint point) {
+        int px = point.getX();
+        int py = point.getY();
+        int x = this.x;
+        int y = this.y;
 
         // If a tile is adjacent to this tile's edges.
         if ((px == x - 1 || px == x + 1) | (py == y - 1 || py == y + 1)) {
