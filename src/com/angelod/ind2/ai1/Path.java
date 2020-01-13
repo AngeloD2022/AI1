@@ -31,6 +31,13 @@ public class Path {
         pathTiles[x][y] = !pathTiles[x][y];
     }
 
+    public boolean[][] getPathTiles() {
+        return pathTiles;
+    }
+
+    public void setPathTiles(boolean[][] pathTiles) {
+        this.pathTiles = pathTiles;
+    }
 
     /**
      * Draws path to graphics object.

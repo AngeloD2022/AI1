@@ -7,24 +7,30 @@ import java.awt.event.*;
 
 public class AIPanel extends JPanel {
 
-    int xSegs = 1;
-    int ySegs = 12;
+    int xSegs = 70;
+    int ySegs = 70;
     int w = this.getWidth();
     int h = this.getHeight();
     int middleAxisLineWeight = 2;
     Path path;
     int x1;
     int y1;
+    PaintTool selectedTool;
+    PaintTool eraser;
+    PaintTool brush;
 
 
     public AIPanel() {
         super();
+        brush = new Paintbrush("paintbrush");
+        selectedTool = brush;
         this.path = new Path(xSegs, ySegs);
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
                 //path.toggleTile(e.getX(),e.getY());
+
                 repaint();
                 System.out.println("CLICK");
 
@@ -60,7 +66,8 @@ public class AIPanel extends JPanel {
                 int x2 = e.getX() / (getWidth() / xSegs);
                 int y2 = e.getY() / (getHeight() / ySegs);
                 if (x2 != x1 || y2 != y1) {
-                    path.toggleTile(e.getX(), e.getY());
+//                    path.toggleTile(e.getX(), e.getY());
+                    path.setPathTiles(selectedTool.doPaint(x2, y2, path.getPathTiles(), 4));
                     x1 = e.getX() / (getWidth() / xSegs);
                     y1 = e.getY() / (getHeight() / ySegs);
                 }
