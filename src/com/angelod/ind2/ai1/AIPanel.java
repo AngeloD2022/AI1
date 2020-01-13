@@ -7,8 +7,8 @@ import java.awt.event.*;
 
 public class AIPanel extends JPanel {
 
-    int xSegs = 70;
-    int ySegs = 70;
+    int xSegs = 100;
+    int ySegs = 100;
     int w = this.getWidth();
     int h = this.getHeight();
     int middleAxisLineWeight = 2;
@@ -39,8 +39,8 @@ public class AIPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 path.toggleTile(e.getX(), e.getY());
-                x1 = e.getX() / (600 / xSegs);
-                y1 = e.getY() / (600 / ySegs);
+                x1 = e.getX() / (getWidth() / xSegs);
+                y1 = e.getY() / (getWidth() / ySegs);
                 System.out.println("PRESS");
             }
 
@@ -67,7 +67,7 @@ public class AIPanel extends JPanel {
                 int y2 = e.getY() / (getHeight() / ySegs);
                 if (x2 != x1 || y2 != y1) {
 //                    path.toggleTile(e.getX(), e.getY());
-                    path.setPathTiles(selectedTool.doPaint(x2, y2, path.getPathTiles(), 4));
+                    path.setPathTiles(selectedTool.doPaint(x2, y2, path.getPathTiles(), 2));
                     x1 = e.getX() / (getWidth() / xSegs);
                     y1 = e.getY() / (getHeight() / ySegs);
                 }

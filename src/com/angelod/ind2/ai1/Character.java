@@ -41,5 +41,25 @@ public abstract class Character {
         }
     }
 
+    public int[] distanceFromPathWalls() {
+        boolean[][] pathTiles = path.getPathTiles();
+        int[] results = new int[5];
+        int iterations = 0;
+        for (int theta = -90; theta <= 90; theta += 45) {
+            double distance = 0;
+            int radiusx = 0;
+            int radiusy = 0;
+            while (pathTiles[x + radiusx][y + radiusy]) {
+                int directionDegrees = rotDegrees + theta;
+                radiusx = (int) ((distance * Math.cos(directionDegrees * (Math.PI / 180))) / (779 / 100));
+                radiusy = (int) ((distance * Math.sin(directionDegrees * (Math.PI / 180))) / (779 / 100));
+                distance += .2;
+            }
+            results[iterations] = (int) distance;
+            iterations++;
+        }
+        return new int[]{0, 0};
+    }
+
 
 }

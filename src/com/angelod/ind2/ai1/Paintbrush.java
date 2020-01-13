@@ -25,6 +25,7 @@ public class Paintbrush extends PaintTool {
             }
         }
 
+
         return result;
 
     }
