@@ -1,4 +1,4 @@
-package com.angelod.ind2.ai1;
+package com.angelod.ind2.ai1.path;
 
 public class Vector {
 

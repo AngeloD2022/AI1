@@ -9,8 +9,8 @@ public class AI extends Character {
     /**
      * @param path the path for the character to be aware of
      */
-    public AI(Path path, NeuralNetwork network) {
-        super(path);
+    public AI(Path path, int x, int y, NeuralNetwork network) {
+        super(path, x, y);
         nNet = network;
     }
 

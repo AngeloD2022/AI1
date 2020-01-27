@@ -1,21 +1,33 @@
 package com.angelod.ind2.ai1;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public abstract class Character {
 
     private Path path;
-    private int x;
-    private int y;
-    private int rotDegrees;
-    private int speed;
+    private double x;
+    private double y;
+    private double rotDegrees;
+    private double time;
+    private double speedx;
+    private double speedy;
+    private double speedPerSecond = 1;
+
+    private int[] wasd;
 
 
     /**
      * @param path the path for the character to be aware of
      */
-    public Character(Path path) {
+    public Character(Path path, int x, int y) {
         this.path = path;
+        this.x = x * (779 / 100);
+        this.y = y * (779 / 100);
+        wasd = new int[]{0, 0, 0, 0};
+
     }
 
 
@@ -24,41 +36,114 @@ public abstract class Character {
 
         g.setColor(Color.blue);
 
-        g.fillArc(x - 5, y - 5, 10, 10, 0, 360);
+        g.fillArc((int) x - 5, (int) y - 5, 10, 10, 0, 360);
 
         g.setColor(Color.red);
 
-        g.drawLine(x, y, (int) (x + (20 * Math.cos(rotDegrees * (Math.PI / 180)))), (int) (y - (20 * Math.sin(rotDegrees * (Math.PI / 180)))));
+        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees - 90) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees - 90) * (Math.PI / 180)))));
+        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees - 45) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees - 45) * (Math.PI / 180)))));
+        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos(rotDegrees * (Math.PI / 180)))), (int) (y - (450 * Math.sin(rotDegrees * (Math.PI / 180)))));
+        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees + 45) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees + 45) * (Math.PI / 180)))));
+        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees + 90) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees + 90) * (Math.PI / 180)))));
 
         g.setColor(c);
 
     }
 
-    public void move(int w, int a, int s, int d) {
-        if (path.validMove(x, y, w, a, s, d)) {
-            x = x + d - a;
-            y = y + s - w;
-        }
+
+    public void pressMove(int w, int a, int s, int d) {
+        //double speed = 2*Math.cos(time * (Math.PI/180));
+        wasd[0] = w; // Accel
+        wasd[1] = a; // +rot
+        wasd[2] = s; // -Accel
+        wasd[3] = d; // -rot
     }
 
+    public void releaseMove(int w, int a, int s, int d) {
+        //double speed = 2*Math.cos(time * (Math.PI/180));
+        wasd[0] -= w;
+        wasd[1] -= a;
+        wasd[2] -= s;
+        wasd[3] -= d;
+    }
+
+    double maxSpeed = 100; // Pixels per second
+    double speed = 0;
+    double maxRotSpeed = 50;
+    double rotSpeed = 0;
+
+    public void update(int time) {
+
+
+        int rotAccel = (wasd[1] - wasd[3]);
+
+        int acceleration = wasd[0] - wasd[2];
+        System.out.println(acceleration);
+
+        if (speed + acceleration >= 0 && speed + acceleration < maxSpeed) {
+            speed += acceleration;
+        }
+
+        if (rotAccel != 0 && Math.abs(rotSpeed + rotAccel) < maxRotSpeed) {
+            rotSpeed += rotAccel;
+        }
+        if (rotAccel == 0) {
+            if (rotSpeed > 0) {
+                rotSpeed -= 1;
+            } else if (rotSpeed < 0) {
+                rotSpeed += 1;
+            }
+        }
+
+
+        rotDegrees += rotSpeed / 25;
+        x += (speed / 20) * Math.cos(rotDegrees * (Math.PI / 180));
+        y -= (speed / 20) * Math.sin(rotDegrees * (Math.PI / 180));
+        this.time = time;
+    }
+
+
+    /**
+     * Returns five wall distance measurements in pixels from -90 deg to +90 deg @ 45 deg increments relative to character rotation.
+     *
+     * @return
+     */
     public int[] distanceFromPathWalls() {
+
         boolean[][] pathTiles = path.getPathTiles();
+
         int[] results = new int[5];
+
         int iterations = 0;
+
         for (int theta = -90; theta <= 90; theta += 45) {
+
             double distance = 0;
             int radiusx = 0;
             int radiusy = 0;
-            while (pathTiles[x + radiusx][y + radiusy]) {
-                int directionDegrees = rotDegrees + theta;
-                radiusx = (int) ((distance * Math.cos(directionDegrees * (Math.PI / 180))) / (779 / 100));
-                radiusy = (int) ((distance * Math.sin(directionDegrees * (Math.PI / 180))) / (779 / 100));
-                distance += .2;
+
+            // Character's rotation + relative measuring angle increment.
+            double directionDegrees = rotDegrees + theta;
+            double cosineFunction = Math.cos(directionDegrees * (Math.PI / 180.0));
+            double sineFunction = Math.sin(directionDegrees * (Math.PI / 180.0));
+
+            while (pathTiles[(int) (x + radiusx)][(int) (y + radiusy)]) {
+
+                // radiusx and radiusy are the coordinates for the current measuring ray endpoint for directionDegrees.
+                radiusx = (int) ((distance * cosineFunction) / (779.0 / 100.0));
+                radiusy = (int) ((distance * sineFunction) / (779.0 / 100.0));
+
+                if (distance >= 450)
+                    break;
+                // Increment measuring radius by 3 pixels.
+                distance += 3;
             }
+
             results[iterations] = (int) distance;
             iterations++;
         }
-        return new int[]{0, 0};
+
+        return results;
     }
 
 

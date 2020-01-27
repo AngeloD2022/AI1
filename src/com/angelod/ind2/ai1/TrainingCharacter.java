@@ -4,8 +4,8 @@ public class TrainingCharacter extends Character {
     /**
      * @param path the path for the character to be aware of
      */
-    public TrainingCharacter(Path path) {
-        super(path);
+    public TrainingCharacter(Path path, int x, int y) {
+        super(path, x, y);
     }
 
 

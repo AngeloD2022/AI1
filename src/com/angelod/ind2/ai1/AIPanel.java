@@ -1,5 +1,7 @@
 package com.angelod.ind2.ai1;
 
+import javafx.scene.input.KeyCode;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,9 +11,6 @@ public class AIPanel extends JPanel {
 
     int xSegs = 100;
     int ySegs = 100;
-    int w = this.getWidth();
-    int h = this.getHeight();
-    int middleAxisLineWeight = 2;
     Path path;
     int x1;
     int y1;
@@ -19,12 +18,21 @@ public class AIPanel extends JPanel {
     PaintTool eraser;
     PaintTool brush;
 
+    Character ai;
+    Character training;
 
-    public AIPanel() {
+
+    public AIPanel(Path path, Character training, Character AI) {
         super();
+
+        this.path = path;
         brush = new Paintbrush("paintbrush");
         selectedTool = brush;
-        this.path = new Path(xSegs, ySegs);
+
+        this.path = new Path(xSegs, ySegs, getWidth(), getHeight());
+        this.training = training;
+        this.ai = AI;
+        // Events
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -38,7 +46,7 @@ public class AIPanel extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                path.toggleTile(e.getX(), e.getY());
+                //path.toggleTile(e.getX(), e.getY());
                 x1 = e.getX() / (getWidth() / xSegs);
                 y1 = e.getY() / (getWidth() / ySegs);
                 System.out.println("PRESS");
@@ -59,7 +67,6 @@ public class AIPanel extends JPanel {
 
             }
         });
-
         addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -80,57 +87,21 @@ public class AIPanel extends JPanel {
 
             }
         });
-    }
-
-    public void repaint() {
-        super.repaint();
-    }
-
-    public int getHeight() {
-        return super.getHeight();
-    }
-
-    public int getWidth() {
-        return super.getWidth();
-    }
-
-    void drawGrid(Graphics g) {
-        g.setColor(Color.black);
-        int w = this.getWidth();
-        int h = this.getHeight();
-
-        for (int i = 0; i < xSegs; i++) {
-            int px = (i * w) / xSegs;
-            // If this is the middle value.
-            if (xSegs % 2 > 0 && i == ((xSegs - 1) / 2)) {
-                g.fillRect(px - (middleAxisLineWeight / 2), 0, middleAxisLineWeight, h);
-            } else
-                g.drawLine(px, 0, px, this.getHeight());
-        }
-
-        for (int i = 0; i < ySegs; i++) {
-            int py = (i * h) / ySegs;
-            if (ySegs % 2 > 0 && i == ((ySegs - 1) / 2)) {
-                g.fillRect(0, py - (middleAxisLineWeight / 2), w, middleAxisLineWeight);
-            } else
-                g.drawLine(0, py, w, py);
-        }
+        this.setSize(779, 779);
 
     }
 
-    void startDesigner(){
-        
-    }
+
+
+
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(Color.red);
-        path.drawPath(1, 0, 0, g, this.getWidth(), this.getHeight());
-        //drawGrid(g);
+        path.drawPath(g);
         System.out.println("REPAINT");
-        g.drawString(this.getWidth() + ", " + this.getHeight(), 50, 50);
-
+        training.paint(g);
     }
 
 
