@@ -78,15 +78,16 @@ public abstract class Character {
         int rotAccel = (wasd[1] - wasd[3]);
 
         int acceleration = wasd[0] - wasd[2];
-        System.out.println(acceleration);
+//        System.out.println(acceleration);
 
-        if (speed + acceleration >= 0 && speed + acceleration < maxSpeed) {
+        if (acceleration != 0 && Math.abs(speed + acceleration) < maxSpeed) {
             speed += acceleration;
         }
 
         if (rotAccel != 0 && Math.abs(rotSpeed + rotAccel) < maxRotSpeed) {
             rotSpeed += rotAccel;
         }
+
         if (rotAccel == 0) {
             if (rotSpeed > 0) {
                 rotSpeed -= 1;
@@ -94,12 +95,32 @@ public abstract class Character {
                 rotSpeed += 1;
             }
         }
+        if (acceleration == 0) {
+            if (speed > 0) {
+                speed -= 1;
+            } else if (speed < 0) {
+                speed += 1;
+            }
+        }
 
 
         rotDegrees += rotSpeed / 25;
-        x += (speed / 20) * Math.cos(rotDegrees * (Math.PI / 180));
-        y -= (speed / 20) * Math.sin(rotDegrees * (Math.PI / 180));
+        double newx = x + (speed / 20) * Math.cos(rotDegrees * (Math.PI / 180));
+        double newy = y - (speed / 20) * Math.sin(rotDegrees * (Math.PI / 180));
+        if (path.validMove((int) newx, (int) newy)) {
+            x = newx;
+            y = newy;
+        }
         this.time = time;
+
+        dump(distanceFromPathWalls());
+    }
+
+    void dump(int[] a) {
+        for (int x : a) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
     }
 
 
@@ -119,8 +140,8 @@ public abstract class Character {
         for (int theta = -90; theta <= 90; theta += 45) {
 
             double distance = 0;
-            int radiusx = 0;
-            int radiusy = 0;
+            double radiusx = 0;
+            double radiusy = 0;
 
             // Character's rotation + relative measuring angle increment.
             double directionDegrees = rotDegrees + theta;
@@ -130,13 +151,13 @@ public abstract class Character {
             while (pathTiles[(int) (x + radiusx)][(int) (y + radiusy)]) {
 
                 // radiusx and radiusy are the coordinates for the current measuring ray endpoint for directionDegrees.
-                radiusx = (int) ((distance * cosineFunction) / (779.0 / 100.0));
-                radiusy = (int) ((distance * sineFunction) / (779.0 / 100.0));
+                radiusx = ((distance * cosineFunction) / (779.0 / 100.0));
+                radiusy = ((distance * sineFunction) / (779.0 / 100.0));
 
                 if (distance >= 450)
                     break;
                 // Increment measuring radius by 3 pixels.
-                distance += 3;
+                distance += .2;
             }
 
             results[iterations] = (int) distance;

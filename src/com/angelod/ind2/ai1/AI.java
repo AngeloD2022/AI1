@@ -1,6 +1,6 @@
 package com.angelod.ind2.ai1;
 
-import com.angelod.ind2.nnlib.NeuralNetwork;
+import com.angelod.ind2.nn.NeuralNetwork;
 
 public class AI extends Character {
 
