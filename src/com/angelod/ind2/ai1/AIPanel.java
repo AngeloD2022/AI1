@@ -1,6 +1,6 @@
 package com.angelod.ind2.ai1;
 
-import javafx.scene.input.KeyCode;
+import com.angelod.ind2.ai1.path.Path2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,25 +11,25 @@ public class AIPanel extends JPanel {
 
     int xSegs = 100;
     int ySegs = 100;
-    Path path;
+    Path2 path;
     int x1;
     int y1;
     PaintTool selectedTool;
     PaintTool eraser;
-    PaintTool brush;
+    VectorPen brush;
 
     Character ai;
     Character training;
 
 
-    public AIPanel(Path path, Character training, Character AI) {
+    public AIPanel(Path2 path, Character training, Character AI) {
         super();
 
         this.path = path;
-        brush = new Paintbrush("paintbrush");
+        brush = new VectorPen();
         selectedTool = brush;
 
-        this.path = new Path(xSegs, ySegs, getWidth(), getHeight());
+        this.path = new Path2(xSegs, ySegs, getWidth(), getHeight());
         this.training = training;
         this.ai = AI;
         // Events
@@ -101,7 +101,9 @@ public class AIPanel extends JPanel {
         g.setColor(Color.red);
         path.drawPath(g);
         System.out.println("REPAINT");
+        brush.draw(g);
         training.paint(g);
+
     }
 
 

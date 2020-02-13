@@ -1,5 +1,7 @@
 package com.angelod.ind2.ai1;
 
+import com.angelod.ind2.ai1.path.Path2;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -12,8 +14,8 @@ public class AIPanelV2 extends JPanel {
     private int screenWidth;
     private int screenHeight;
     private Timer updateCharacterTimer;
-    PaintTool selectedTool;
-    Path path;
+    VectorPen selectedTool;
+    Path2 path;
 
 
     public AIPanelV2() {
@@ -23,8 +25,8 @@ public class AIPanelV2 extends JPanel {
         updateCharacterTimer = new Timer(10, new UpdateCharacterListener());
         addMouseListener(new MousePressedListener());
         addMouseMotionListener(new MouseDragListener());
-        selectedTool = new Paintbrush("paintbrush");
-        path = new Path(xSegments, ySegments, screenWidth, screenHeight);
+        selectedTool = new VectorPen();
+        path = new Path2(xSegments, ySegments, screenWidth, screenHeight);
         training = new TrainingCharacter(path, 10, 10);
         updateCharacterTimer.start();
 
@@ -96,10 +98,10 @@ public class AIPanelV2 extends JPanel {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            int x = e.getX() / (screenWidth / xSegments);
-            int y = e.getY() / (screenHeight / ySegments);
+//            int x = e.getX() / (screenWidth / xSegments);
+//            int y = e.getY() / (screenHeight / ySegments);
 
-            useTool(x, y);
+            useTool(e.getX(), e.getY());
         }
 
 
@@ -109,10 +111,10 @@ public class AIPanelV2 extends JPanel {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            int x = e.getX() / (screenWidth / xSegments);
-            int y = e.getY() / (screenHeight / ySegments);
+//            int x = e.getX() / (screenWidth / xSegments);
+//            int y = e.getY() / (screenHeight / ySegments);
 
-            useTool(x, y);
+            useTool(e.getX(), e.getY());
         }
 
         @Override
@@ -156,6 +158,7 @@ public class AIPanelV2 extends JPanel {
         super.paint(g);
         path.drawPath(g);
         training.paint(g);
+        selectedTool.draw(g);
 //        drawGrid(g);
     }
 }

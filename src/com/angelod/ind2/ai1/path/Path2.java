@@ -1,8 +1,11 @@
-package com.angelod.ind2.ai1;
+package com.angelod.ind2.ai1.path;
+
+import com.angelod.ind2.ai1.PaintTool;
+import com.angelod.ind2.ai1.VectorPen;
 
 import java.awt.*;
 
-public class Path {
+public class Path2 {
 
     /**
      * All points on the path.
@@ -14,13 +17,13 @@ public class Path {
     private int screenWidth;
     private int screenHeight;
 
-
-    public Path(int xSegments, int ySegments, int screenWidth, int screenHeight) {
+    public Path2(int xSegments, int ySegments, int screenWidth, int screenHeight) {
         this.xSegments = xSegments;
         this.ySegments = ySegments;
         this.pathTiles = new boolean[xSegments][ySegments];
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+
     }
 
     public boolean[][] getPathTiles() {
@@ -37,14 +40,14 @@ public class Path {
      * @param g Graphics object to draw to.
      */
     public void drawPath(Graphics g) {
-        int xIncrement = screenWidth / xSegments;
-        int yIncrement = screenHeight / ySegments;
+        double xIncrement = screenWidth / (double) xSegments;
+        double yIncrement = screenHeight / (double) ySegments;
 
         for (int x = 0; x < xSegments; x++) {
             for (int y = 0; y < ySegments; y++) {
                 if (pathTiles[x][y]) {
                     g.setColor(Color.darkGray);
-                    g.fillRect((x * xIncrement), (y * yIncrement), xIncrement /*- ((screenWidth % xSegments) / xSegments)*/, yIncrement /*- ((screenHeight % ySegments) / ySegments)*/);
+                    g.fillRect((int) (x * xIncrement), (int) (y * yIncrement), (int) xIncrement + 1 /*- ((screenWidth % xSegments) / xSegments)*/, (int) yIncrement + 1 /*- ((screenHeight % ySegments) / ySegments)*/);
                     //g.setColor(Color.darkGray);
                     //g.drawRect((x*xIncrement)+xOffset,(y*yIncrement)+yOffset,xIncrement,yIncrement);
                 }
@@ -52,9 +55,9 @@ public class Path {
         }
     }
 
-    public boolean validMove(int newx, int newy) {
-        int x = (int) (newx / (screenWidth / xSegments));
-        int y = (int) (newy / (screenHeight / ySegments));
+    public boolean validMove(double newx, double newy) {
+        int x = (int) (newx * xSegments / screenWidth);
+        int y = (int) (newy * ySegments / screenHeight);
         return pathTiles[x][y];
     }
 

@@ -1,13 +1,12 @@
 package com.angelod.ind2.ai1;
 
-import javax.swing.*;
+import com.angelod.ind2.ai1.path.Path2;
+
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public abstract class Character {
 
-    private Path path;
+    private Path2 path;
     private double x;
     private double y;
     private double rotDegrees;
@@ -22,7 +21,7 @@ public abstract class Character {
     /**
      * @param path the path for the character to be aware of
      */
-    public Character(Path path, int x, int y) {
+    public Character(Path2 path, int x, int y) {
         this.path = path;
         this.x = x * (779 / 100);
         this.y = y * (779 / 100);
@@ -53,18 +52,18 @@ public abstract class Character {
 
     public void pressMove(int w, int a, int s, int d) {
         //double speed = 2*Math.cos(time * (Math.PI/180));
-        wasd[0] = w; // Accel
-        wasd[1] = a; // +rot
-        wasd[2] = s; // -Accel
-        wasd[3] = d; // -rot
+        wasd[0] |= w; // Accel
+        wasd[1] |= a; // +rot
+        wasd[2] |= s; // -Accel
+        wasd[3] |= d; // -rot
     }
 
     public void releaseMove(int w, int a, int s, int d) {
         //double speed = 2*Math.cos(time * (Math.PI/180));
-        wasd[0] -= w;
-        wasd[1] -= a;
-        wasd[2] -= s;
-        wasd[3] -= d;
+        wasd[0] &= (~w & 1);
+        wasd[1] &= (~a & 1);
+        wasd[2] &= (~s & 1);
+        wasd[3] &= (~d & 1);
     }
 
     double maxSpeed = 100; // Pixels per second
@@ -116,8 +115,8 @@ public abstract class Character {
         dump(distanceFromPathWalls());
     }
 
-    void dump(int[] a) {
-        for (int x : a) {
+    void dump(double[] a) {
+        for (double x : a) {
             System.out.print(x + " ");
         }
         System.out.println();
@@ -129,11 +128,10 @@ public abstract class Character {
      *
      * @return
      */
-    public int[] distanceFromPathWalls() {
+    public double[] distanceFromPathWalls() {
 
-        boolean[][] pathTiles = path.getPathTiles();
 
-        int[] results = new int[5];
+        double[] results = new double[5];
 
         int iterations = 0;
 
@@ -146,21 +144,20 @@ public abstract class Character {
             // Character's rotation + relative measuring angle increment.
             double directionDegrees = rotDegrees + theta;
             double cosineFunction = Math.cos(directionDegrees * (Math.PI / 180.0));
-            double sineFunction = Math.sin(directionDegrees * (Math.PI / 180.0));
+            double sineFunction = -Math.sin(directionDegrees * (Math.PI / 180.0));
 
-            while (pathTiles[(int) (x + radiusx)][(int) (y + radiusy)]) {
+            while (path.validMove(x + radiusx, y + radiusy)) {
+                // Increment measuring radius by 3 pixels.
+                distance += 1;
 
                 // radiusx and radiusy are the coordinates for the current measuring ray endpoint for directionDegrees.
-                radiusx = ((distance * cosineFunction) / (779.0 / 100.0));
-                radiusy = ((distance * sineFunction) / (779.0 / 100.0));
+                radiusx = distance * cosineFunction;
+                radiusy = distance * sineFunction;
 
                 if (distance >= 450)
                     break;
-                // Increment measuring radius by 3 pixels.
-                distance += .2;
             }
-
-            results[iterations] = (int) distance;
+            results[iterations] = distance;
             iterations++;
         }
 
