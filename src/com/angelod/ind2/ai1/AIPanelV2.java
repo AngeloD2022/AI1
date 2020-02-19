@@ -18,7 +18,7 @@ public class AIPanelV2 extends JPanel {
     Path2 path;
 
 
-    public AIPanelV2() {
+    public AIPanelV2(AI character) {
         screenWidth = 779;
         screenHeight = 779;
 

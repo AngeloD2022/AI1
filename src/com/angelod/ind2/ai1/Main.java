@@ -16,7 +16,7 @@ public class Main {
     static int iterations = 0;
 
     public static void main(String[] args) {
-        new MainWindow().setVisible(true);
+        new MainWindow().setVisible(false);
 
     }
 

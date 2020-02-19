@@ -1,17 +1,23 @@
 package com.angelod.ind2.nn;
 
-import java.sql.SQLOutput;
 
 public class NeuralNetwork {
 
     private Layer[] network;
 
+    private int[] networkLayerCounts;
+
     public NeuralNetwork(int[] layers) {
+        networkLayerCounts = layers;
         network = new Layer[layers.length - 1];
         for (int i = 0; i < layers.length - 1; i++) {
             //One layer's output is next layer's input.
             network[i] = new Layer(layers[i], layers[i + 1]);
         }
+    }
+
+    public int[] getNetworkLayerCounts() {
+        return networkLayerCounts;
     }
 
     public double[] runNetwork(double[] inputs) {
@@ -30,5 +36,7 @@ public class NeuralNetwork {
         return out;
     }
 
-
+    public Layer[] getNetwork() {
+        return network;
+    }
 }
