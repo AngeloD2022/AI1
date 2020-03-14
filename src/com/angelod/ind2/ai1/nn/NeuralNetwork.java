@@ -1,4 +1,4 @@
-package com.angelod.ind2.nn;
+package com.angelod.ind2.ai1.nn;
 
 
 public class NeuralNetwork {
@@ -16,6 +16,15 @@ public class NeuralNetwork {
         }
     }
 
+    public NeuralNetwork(NeuralNetwork network, double mutRate) {
+        networkLayerCounts = network.getNetworkLayerCounts();
+        this.network = new Layer[networkLayerCounts.length - 1];
+        for (int i = 0; i < networkLayerCounts.length - 1; i++) {
+            //One layer's output is next layer's input.
+            this.network[i] = new Layer(network.getNetwork()[i], mutRate);
+        }
+    }
+
     public int[] getNetworkLayerCounts() {
         return networkLayerCounts;
     }
@@ -30,7 +39,6 @@ public class NeuralNetwork {
                 out = network[i].results(inputs);
             else
                 out = network[i].results(out);
-
         }
 
         return out;

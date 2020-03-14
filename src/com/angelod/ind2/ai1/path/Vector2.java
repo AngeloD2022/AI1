@@ -25,7 +25,7 @@ public class Vector2 {
         return x * b.y - y * b.x;
     }
 
-    public void add(Vector2 b) {
+    /*public void add(Vector2 b) {
         x += b.x;
         y += b.y;
     }
@@ -33,8 +33,13 @@ public class Vector2 {
     public void subtract(Vector2 b) {
         x -= b.x;
         y -= b.y;
+    }*/
+    public Vector2 subtractNew(Vector2 b) {
+        // x -= b.x;
+        //y -= b.y;
+        return new Vector2(x - b.x, y - b.y);
     }
-
+/*
     public void add(double b) {
         x += b;
         y += b;
@@ -48,7 +53,9 @@ public class Vector2 {
     public void multiply(double b) {
         x *= b;
         y *= b;
-    }
+
+ */
+
 
     public double length() {
         return Math.sqrt(x * x + y * y);
@@ -58,22 +65,27 @@ public class Vector2 {
         return x * x + y * y;
     }
 
-    public void normalize() {
-        double l = length();
-        x /= l;
-        y /= l;
-    }
+    /*    public void normalize() {
+            double l = length();
+            x /= l;
+            y /= l;
+        }
 
-    public void setX(double x) {
-        this.x = x;
-    }
+        public void setX(double x) {
+            this.x = x;
+        }
 
-    public void setY(double y) {
-        this.y = y;
-    }
-
+        public void setY(double y) {
+            this.y = y;
+        }
+    */
     public double getX() {
         return x;
+    }
+
+    public Vector2 normalize() {
+        double l = length();
+        return new Vector2(x / l, y / l);
     }
 
     public double getY() {

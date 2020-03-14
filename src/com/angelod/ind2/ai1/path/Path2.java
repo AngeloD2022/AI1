@@ -58,8 +58,12 @@ public class Path2 {
     public boolean validMove(double newx, double newy) {
         int x = (int) (newx * xSegments / screenWidth);
         int y = (int) (newy * ySegments / screenHeight);
+        if ((x < 0 || x >= pathTiles.length) || (y < 0 || y >= pathTiles[0].length)) {
+            return false;
+        }
         return pathTiles[x][y];
     }
+
 
     public void clear() {
         pathTiles = new boolean[xSegments][ySegments];

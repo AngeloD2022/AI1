@@ -1,14 +1,7 @@
 package com.angelod.ind2.ai1;
 
-import com.angelod.ind2.nn.NeuralNetwork;
+import com.angelod.ind2.ai1.nn.NeuralNetwork;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -16,12 +9,12 @@ public class Main {
     static int iterations = 0;
 
     public static void main(String[] args) {
-        new MainWindow().setVisible(false);
-
+        new MainWindow().setVisible(true);
+//        doNNTest();
     }
 
     public static void doNNTest() {
-        int[] sequence = new int[]{4, 8, 8, 3};
+        int[] sequence = new int[]{6, 8, 8, 4};
 
 
         NeuralNetwork nn = new NeuralNetwork(sequence);

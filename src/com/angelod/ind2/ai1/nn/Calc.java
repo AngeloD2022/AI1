@@ -1,4 +1,4 @@
-package com.angelod.ind2.nn;
+package com.angelod.ind2.ai1.nn;
 
 public class Calc {
     public static double sigmoid(double x) {

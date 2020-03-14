@@ -6,16 +6,14 @@ import java.awt.*;
 
 public abstract class Character {
 
-    private Path2 path;
-    private double x;
-    private double y;
-    private double rotDegrees;
-    private double time;
-    private double speedx;
-    private double speedy;
-    private double speedPerSecond = 1;
+    public Path2 path;
+    public double x;
+    public double y;
+    public double rotDegrees;
+    double forward = 0.00;
+    double left = 0.00;
 
-    private int[] wasd;
+    private double[] wasd;
 
 
     /**
@@ -25,7 +23,7 @@ public abstract class Character {
         this.path = path;
         this.x = x * (779 / 100);
         this.y = y * (779 / 100);
-        wasd = new int[]{0, 0, 0, 0};
+        wasd = new double[]{0, 0, 0, 0};
 
     }
 
@@ -39,11 +37,11 @@ public abstract class Character {
 
         g.setColor(Color.red);
 
-        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees - 90) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees - 90) * (Math.PI / 180)))));
-        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees - 45) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees - 45) * (Math.PI / 180)))));
-        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos(rotDegrees * (Math.PI / 180)))), (int) (y - (450 * Math.sin(rotDegrees * (Math.PI / 180)))));
-        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees + 45) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees + 45) * (Math.PI / 180)))));
-        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees + 90) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees + 90) * (Math.PI / 180)))));
+//        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees - 90) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees - 90) * (Math.PI / 180)))));
+//        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees - 45) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees - 45) * (Math.PI / 180)))));
+        g.drawLine((int) x, (int) y, (int) (x + (10 * Math.cos(rotDegrees * (Math.PI / 180)))), (int) (y - (450 * Math.sin(rotDegrees * (Math.PI / 180)))));
+//        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees + 45) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees + 45) * (Math.PI / 180)))));
+//        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees + 90) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees + 90) * (Math.PI / 180)))));
 
         g.setColor(c);
 
@@ -52,18 +50,18 @@ public abstract class Character {
 
     public void pressMove(int w, int a, int s, int d) {
         //double speed = 2*Math.cos(time * (Math.PI/180));
-        wasd[0] |= w; // Accel
-        wasd[1] |= a; // +rot
-        wasd[2] |= s; // -Accel
-        wasd[3] |= d; // -rot
+//        wasd[0] |= w; // Accel
+//        wasd[1] |= a; // +rot
+//        wasd[2] |= s; // -Accel
+//        wasd[3] |= d; // -rot
     }
 
     public void releaseMove(int w, int a, int s, int d) {
         //double speed = 2*Math.cos(time * (Math.PI/180));
-        wasd[0] &= (~w & 1);
-        wasd[1] &= (~a & 1);
-        wasd[2] &= (~s & 1);
-        wasd[3] &= (~d & 1);
+//        wasd[0] &= (~w & 1);
+//        wasd[1] &= (~a & 1);
+//        wasd[2] &= (~s & 1);
+//        wasd[3] &= (~d & 1);
     }
 
     double maxSpeed = 100; // Pixels per second
@@ -71,12 +69,12 @@ public abstract class Character {
     double maxRotSpeed = 50;
     double rotSpeed = 0;
 
-    public void update(int time) {
+    public void update(double time) {
 
 
-        int rotAccel = (wasd[1] - wasd[3]);
+        double rotAccel = left;
 
-        int acceleration = wasd[0] - wasd[2];
+        double acceleration = forward;
 //        System.out.println(acceleration);
 
         if (acceleration != 0 && Math.abs(speed + acceleration) < maxSpeed) {
@@ -110,7 +108,7 @@ public abstract class Character {
             x = newx;
             y = newy;
         }
-        this.time = time;
+//        this.time = time;
 
         dump(distanceFromPathWalls());
     }
@@ -154,8 +152,10 @@ public abstract class Character {
                 radiusx = distance * cosineFunction;
                 radiusy = distance * sineFunction;
 
-                if (distance >= 450)
+                if (distance >= 450) {
+                    distance = 450;
                     break;
+                }
             }
             results[iterations] = distance;
             iterations++;

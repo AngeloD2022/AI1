@@ -1,35 +1,39 @@
 package com.angelod.ind2.ai1;
 
 import com.angelod.ind2.ai1.path.Path2;
+import com.angelod.ind2.ai1.path.Vector2;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class AIPanelV2 extends JPanel {
 
-    private Character training;
+    private ArrayList<AI> character;
     private int xSegments = 100;
     private int ySegments = 100;
     private int screenWidth;
     private int screenHeight;
-    private Timer updateCharacterTimer;
     VectorPen selectedTool;
     Path2 path;
 
+    public ArrayList<AI> getAllCharacters() {
+        return character;
+    }
 
-    public AIPanelV2(AI character) {
+    public AIPanelV2() {
         screenWidth = 779;
         screenHeight = 779;
-
-        updateCharacterTimer = new Timer(10, new UpdateCharacterListener());
         addMouseListener(new MousePressedListener());
         addMouseMotionListener(new MouseDragListener());
         selectedTool = new VectorPen();
         path = new Path2(xSegments, ySegments, screenWidth, screenHeight);
-        training = new TrainingCharacter(path, 10, 10);
-        updateCharacterTimer.start();
+        this.character = new ArrayList<>();
+    }
 
+    public Path2 getPath() {
+        return path;
     }
 
     class CharacterKeyInput implements KeyListener {
@@ -47,7 +51,7 @@ public class AIPanelV2 extends JPanel {
             int d = e.getKeyCode() == 68 ? 1 : 0;
 
             System.out.println(w + "" + a + "" + s + "" + d + "||" + e.getKeyCode());
-            training.pressMove(w, a, s, d);
+            //character.pressMove(w, a, s, d);
         }
 
         @Override
@@ -58,27 +62,27 @@ public class AIPanelV2 extends JPanel {
             int d = e.getKeyCode() == 68 ? 1 : 0;
 
             System.out.println(w + "" + a + "" + s + "" + d + "||" + e.getKeyCode());
-            training.releaseMove(w, a, s, d);
+            //character.releaseMove(w, a, s, d);
         }
     }
 
-    class UpdateCharacterListener implements ActionListener {
-        int time = 0;
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            training.update(time);
-            repaint();
-            time++;
-        }
+    public void addCharacter(AI character) {
+        this.character.add(character);
+    }
 
+
+    public Vector2[] getPathVectors() {
+        Vector2[] x = new Vector2[selectedTool.getPathVectors().size()];
+        x = (selectedTool.getPathVectors().toArray(new Vector2[0]));
+        return x;
     }
 
     class MousePressedListener implements MouseListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-
+            useTool(e.getX(), e.getY());
         }
 
         @Override
@@ -101,11 +105,12 @@ public class AIPanelV2 extends JPanel {
 //            int x = e.getX() / (screenWidth / xSegments);
 //            int y = e.getY() / (screenHeight / ySegments);
 
-            useTool(e.getX(), e.getY());
+
         }
 
 
     }
+
 
     class MouseDragListener implements MouseMotionListener {
 
@@ -114,7 +119,7 @@ public class AIPanelV2 extends JPanel {
 //            int x = e.getX() / (screenWidth / xSegments);
 //            int y = e.getY() / (screenHeight / ySegments);
 
-            useTool(e.getX(), e.getY());
+//            useTool(e.getX(), e.getY());
         }
 
         @Override
@@ -157,8 +162,11 @@ public class AIPanelV2 extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         path.drawPath(g);
-        training.paint(g);
+//        character.paint(g);
         selectedTool.draw(g);
 //        drawGrid(g);
+        for (AI ai : character) {
+            ai.paint(g);
+        }
     }
 }
