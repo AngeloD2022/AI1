@@ -43,15 +43,16 @@ public class AI extends Character {
 
         Vector2 mypath = vectors[pathIx];
         double dist = 0;
-        for (int i = 0; i < pathIx - 1; i++) {
+        for (int i = 0; i < pathIx; i++) {
             dist += pathDeltas[i].length();
         }
 
-        // (P - S dot E - S) / Length of E-S
+        // (P - S dot E - S)
         Vector2 lineP = new Vector2(super.x, super.y).subtractNew(mypath);
         Vector2 eMinusS = vectors[pathIx + 1].subtractNew(vectors[pathIx]);
         double lengthOnTrl = lineP.dotProduct(eMinusS.normalize());
-        double progress = lengthOnTrl / eMinusS.length();
+        double progress = lengthOnTrl + dist;
+//        double progress = lengthOnTrl / eMinusS.length();
         return progress;
     }
 
@@ -80,7 +81,7 @@ public class AI extends Character {
 
 //        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees - 90) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees - 90) * (Math.PI / 180)))));
 //        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees - 45) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees - 45) * (Math.PI / 180)))));
-        g.drawLine((int) x, (int) y, (int) (x + (50 * Math.cos(rotDegrees * (Math.PI / 180)))), (int) (y - (450 * Math.sin(rotDegrees * (Math.PI / 180)))));
+        g.drawLine((int) x, (int) y, (int) (x + (50 * Math.cos(rotDegrees * (Math.PI / 180)))), (int) (y - (50 * Math.sin(rotDegrees * (Math.PI / 180)))));
 //        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees + 45) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees + 45) * (Math.PI / 180)))));
 //        g.drawLine((int) x, (int) y, (int) (x + (450 * Math.cos((rotDegrees + 90) * (Math.PI / 180)))), (int) (y - (450 * Math.sin((rotDegrees + 90) * (Math.PI / 180)))));
 
@@ -149,13 +150,13 @@ public class AI extends Character {
 
         double closestDist = 0;
         int closestIx = 0;
-        for (int i = 1; i < vectors.length - 1; i++) {
-            double dist = distanceToSegment(i);
-            if (i == 1) {
-                closestIx = i - 1;
+        for (int i = 0; i < vectors.length - 1; i++) {
+            double dist = Math.abs(distanceToSegment(i));
+            if (i == 0) {
+//                closestIx = 0;
                 closestDist = dist;
             } else if (closestDist > dist) {
-                closestIx = i - 1;
+                closestIx = i;
                 closestDist = dist;
             }
         }
@@ -166,11 +167,11 @@ public class AI extends Character {
         //Progress = player - startPoint dotted with endPoint-startPoint
         Vector2 p = new Vector2(x, y);
         System.out.println("INDEX" + index);
-        double n = Math.abs(p.subtractNew(vectors[index]).dotProduct(vectors[index + 1].subtractNew(vectors[index])) / vectors[index + 1].subtractNew(vectors[index]).length());
+        double n = Math.abs(p.subtractNew(vectors[index]).dotProduct(vectors[index + 1].subtractNew(vectors[index]).normalize()) / vectors[index + 1].subtractNew(vectors[index]).length());
 
-        if (n >= 0 && n <= 1)
+        if (n >= 0 && n <= 1) // If in-between two points
             return p.subtractNew(vectors[index]).dotProduct(perpendiculars[index]);
-        else
+        else // if the player is at the beginning of a path point
             return p.subtractNew(vectors[index]).length();
     }
 

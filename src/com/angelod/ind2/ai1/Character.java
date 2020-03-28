@@ -9,7 +9,7 @@ public abstract class Character {
     public Path2 path;
     public double x;
     public double y;
-    public double rotDegrees;
+    public double rotDegrees = -90;
     double forward = 0.00;
     double left = 0.00;
 

@@ -30,6 +30,7 @@ public class MainWindow extends JFrame {
 
         aipanel = new AIPanelV2();
         this.add(aipanel);
+        aipanel.getPath().getPathTiles()[10][10] = true;
         JButton button = new JButton("Start AI");
         add(button, BorderLayout.SOUTH);
         button.addActionListener(e -> {
@@ -56,7 +57,7 @@ public class MainWindow extends JFrame {
     }
 
     class UpdateCharacterListener implements ActionListener {
-        int time = 0;
+//        int time = 0;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -64,8 +65,8 @@ public class MainWindow extends JFrame {
             for (int i = 0; i < aipanel.getAllCharacters().size(); i++) {
 
                 if (!aipanel.getAllCharacters().get(i).hasFailed()) {
-                    aipanel.getAllCharacters().get(i).update(.02);
-                    time++;
+                    aipanel.getAllCharacters().get(i).update(1);
+//                    time++;
                 }
                 //aipanel.getAllCharacters().add(new AI(path, 10, 10, new NeuralNetwork(aipanel.getAllCharacters().get(i).getNetwork(), .01), vectors, perpendiculars, deltas, pathLength));
             }
@@ -84,7 +85,7 @@ public class MainWindow extends JFrame {
                 netwin.setNetwork(x);
                 aipanel.getAllCharacters().clear();
                 for (int i = 0; i < 100; i++) {
-                    aipanel.addCharacter(new AI(path, 10, 10, new NeuralNetwork(x, 1), vectors, perpendiculars, deltas, pathLength));
+                    aipanel.addCharacter(new AI(path, 10, 10, new NeuralNetwork(x, 1.75), vectors, perpendiculars, deltas, pathLength));
                 }
             }
 
@@ -125,20 +126,26 @@ public class MainWindow extends JFrame {
 
     private Vector2[] computePerpendicularVectors(Vector2[] vectors) {
         Vector2[] result = new Vector2[vectors.length - 1];
+//        Vector2[] result = new Vector2[vectors.length];
         for (int i = 0; i < result.length; i++) {
-            result[i] = new Vector2(
-                    (vectors[i + 1].getY() - vectors[i].getY()) /
-                            new Vector2(vectors[i + 1].getX(), vectors[i + 1].getY())
-                                    .subtractNew(
-                                            new Vector2(vectors[i].getX(),
-                                                    vectors[i].getY()))
-                                    .length()
-                    , (-1 * vectors[i + 1].getX() - vectors[i].getX()) /
-                    new Vector2(vectors[i + 1].getX(), vectors[i + 1].getY())
-                            .subtractNew(new Vector2(vectors[i].getX(),
-                                    vectors[i].getY()))
-                            .length()
+//            result[i] = new Vector2(
+//                    (vectors[i + 1].getY() - vectors[i].getY()) /
+//                            new Vector2(vectors[i + 1].getX(), vectors[i + 1].getY())
+//                                    .subtractNew(
+//                                            new Vector2(vectors[i].getX(),
+//                                                    vectors[i].getY()))
+//                                    .length()
+//                    , (-1 * vectors[i + 1].getX() - vectors[i].getX()) /
+//                    new Vector2(vectors[i + 1].getX(), vectors[i + 1].getY())
+//                            .subtractNew(new Vector2(vectors[i].getX(),
+//                                    vectors[i].getY()))
+//                            .length()
+//            );
+            Vector2 lineDirection = vectors[i + 1].subtractNew(vectors[i]).normalize();
+            Vector2 perp = new Vector2(
+                    lineDirection.getY(), -lineDirection.getX()
             );
+            result[i] = perp;
         }
         return result;
     }

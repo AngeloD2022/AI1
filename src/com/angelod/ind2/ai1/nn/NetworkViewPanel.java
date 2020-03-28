@@ -50,5 +50,6 @@ public class NetworkViewPanel extends JPanel {
 
     public void setNeuralNetwork(NeuralNetwork neuralNetwork) {
         this.neuralNetwork = neuralNetwork;
+        this.repaint();
     }
 }
