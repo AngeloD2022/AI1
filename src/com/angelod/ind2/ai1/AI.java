@@ -1,8 +1,8 @@
 package com.angelod.ind2.ai1;
 
+import com.angelod.ind2.ai1.nn.NeuralNetwork;
 import com.angelod.ind2.ai1.path.Path2;
 import com.angelod.ind2.ai1.path.Vector2;
-import com.angelod.ind2.ai1.nn.NeuralNetwork;
 
 import java.awt.*;
 
@@ -24,6 +24,7 @@ public class AI extends Character {
         super(path, x, y);
         vectors = pathVectors;
         this.perpendiculars = perpendiculars;
+//        network = new NeuralNetwork(new int[]{6, 55, 4});
         network = new NeuralNetwork(new int[]{6, 8, 4});
 //        this.totalPathLength = pathLength;
         this.pathDeltas = pathDeltas;
@@ -167,7 +168,7 @@ public class AI extends Character {
         //Progress = player - startPoint dotted with endPoint-startPoint
         Vector2 p = new Vector2(x, y);
         System.out.println("INDEX" + index);
-        double n = Math.abs(p.subtractNew(vectors[index]).dotProduct(vectors[index + 1].subtractNew(vectors[index]).normalize()) / vectors[index + 1].subtractNew(vectors[index]).length());
+        double n = p.subtractNew(vectors[index]).dotProduct(vectors[index + 1].subtractNew(vectors[index]).normalize()) / vectors[index + 1].subtractNew(vectors[index]).length();
 
         if (n >= 0 && n <= 1) // If in-between two points
             return p.subtractNew(vectors[index]).dotProduct(perpendiculars[index]);

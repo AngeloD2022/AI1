@@ -1,8 +1,8 @@
 package com.angelod.ind2.ai1;
 
-import com.angelod.ind2.ai1.path.Path2;
 import com.angelod.ind2.ai1.nn.NetworkWindow;
 import com.angelod.ind2.ai1.nn.NeuralNetwork;
+import com.angelod.ind2.ai1.path.Path2;
 import com.angelod.ind2.ai1.path.Vector2;
 
 import javax.swing.*;
@@ -128,19 +128,6 @@ public class MainWindow extends JFrame {
         Vector2[] result = new Vector2[vectors.length - 1];
 //        Vector2[] result = new Vector2[vectors.length];
         for (int i = 0; i < result.length; i++) {
-//            result[i] = new Vector2(
-//                    (vectors[i + 1].getY() - vectors[i].getY()) /
-//                            new Vector2(vectors[i + 1].getX(), vectors[i + 1].getY())
-//                                    .subtractNew(
-//                                            new Vector2(vectors[i].getX(),
-//                                                    vectors[i].getY()))
-//                                    .length()
-//                    , (-1 * vectors[i + 1].getX() - vectors[i].getX()) /
-//                    new Vector2(vectors[i + 1].getX(), vectors[i + 1].getY())
-//                            .subtractNew(new Vector2(vectors[i].getX(),
-//                                    vectors[i].getY()))
-//                            .length()
-//            );
             Vector2 lineDirection = vectors[i + 1].subtractNew(vectors[i]).normalize();
             Vector2 perp = new Vector2(
                     lineDirection.getY(), -lineDirection.getX()

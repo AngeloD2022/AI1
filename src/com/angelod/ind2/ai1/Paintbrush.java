@@ -3,7 +3,6 @@ package com.angelod.ind2.ai1;
 public class Paintbrush extends PaintTool {
 
 
-
     @Override
     public boolean[][] doPaint(double x, double y, boolean[][] canvas, int radius) {
 

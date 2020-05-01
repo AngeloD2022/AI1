@@ -1,8 +1,5 @@
 package com.angelod.ind2.ai1.path;
 
-import com.angelod.ind2.ai1.PaintTool;
-import com.angelod.ind2.ai1.VectorPen;
-
 import java.awt.*;
 
 public class Path2 {
